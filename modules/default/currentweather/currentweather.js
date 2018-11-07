@@ -20,6 +20,7 @@ Module.register("currentweather",{
 		timeFormat: config.timeFormat,
 		showPeriod: true,
 		showPeriodUpper: false,
+		showWind: true,
 		showWindDirection: true,
 		showWindDirectionAsArrow: false,
 		useBeaufort: true,
@@ -28,6 +29,7 @@ Module.register("currentweather",{
 		decimalSymbol: ".",
 		showHumidity: false,
 		degreeLabel: false,
+		showSunset: true,
 		showIndoorTemperature: false,
 		showIndoorHumidity: false,
 		showFeelsLike: true,
@@ -97,7 +99,7 @@ Module.register("currentweather",{
 
 		// Set locale.
 		moment.locale(config.language);
-
+		
 		this.windSpeed = null;
 		this.windDirection = null;
 		this.windDeg = null;
@@ -119,26 +121,30 @@ Module.register("currentweather",{
 
 		var small = document.createElement("div");
 		small.className = "normal medium";
+		
+		if (this.config.showWind) {
 
-		var windIcon = document.createElement("span");
-		windIcon.className = "wi wi-strong-wind dimmed";
-		small.appendChild(windIcon);
+			var windIcon = document.createElement("span");
+			windIcon.className = "wi wi-strong-wind dimmed";
+			small.appendChild(windIcon);
 
-		var windSpeed = document.createElement("span");
-		windSpeed.innerHTML = " " + this.windSpeed;
-		small.appendChild(windSpeed);
+			var windSpeed = document.createElement("span");
+			windSpeed.innerHTML = " " + this.windSpeed;
+			small.appendChild(windSpeed);
 
-		if (this.config.showWindDirection) {
-			var windDirection = document.createElement("sup");
-			if (this.config.showWindDirectionAsArrow) {
-				if(this.windDeg !== null) {
-					windDirection.innerHTML = " &nbsp;<i class=\"fa fa-long-arrow-down\" style=\"transform:rotate("+this.windDeg+"deg);\"></i>&nbsp;";
+			if (this.config.showWindDirection) {
+				var windDirection = document.createElement("sup");
+				if (this.config.showWindDirectionAsArrow) {
+					if(this.windDeg !== null) {
+						windDirection.innerHTML = " &nbsp;<i class=\"fa fa-long-arrow-down\" style=\"transform:rotate("+this.windDeg+"deg);\"></i>&nbsp;";
+					}
+				} else {
+					windDirection.innerHTML = " " + this.translate(this.windDirection);
 				}
-			} else {
-				windDirection.innerHTML = " " + this.translate(this.windDirection);
+				small.appendChild(windDirection);
 			}
-			small.appendChild(windDirection);
 		}
+		
 		var spacer = document.createElement("span");
 		spacer.innerHTML = "&nbsp;";
 		small.appendChild(spacer);
@@ -158,14 +164,16 @@ Module.register("currentweather",{
 			small.appendChild(spacer);
 			small.appendChild(humidityIcon);
 		}
+        
+		if (this.config.showSunset) {
+			var sunriseSunsetIcon = document.createElement("span");
+			sunriseSunsetIcon.className = "wi dimmed " + this.sunriseSunsetIcon;
+			small.appendChild(sunriseSunsetIcon);
 
-		var sunriseSunsetIcon = document.createElement("span");
-		sunriseSunsetIcon.className = "wi dimmed " + this.sunriseSunsetIcon;
-		small.appendChild(sunriseSunsetIcon);
-
-		var sunriseSunsetTime = document.createElement("span");
-		sunriseSunsetTime.innerHTML = " " + this.sunriseSunsetTime;
-		small.appendChild(sunriseSunsetTime);
+			var sunriseSunsetTime = document.createElement("span");
+			sunriseSunsetTime.innerHTML = " " + this.sunriseSunsetTime;
+			small.appendChild(sunriseSunsetTime);
+		}
 
 		wrapper.appendChild(small);
 	},
